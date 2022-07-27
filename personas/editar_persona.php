@@ -8,6 +8,8 @@
     $query = mysqli_query($con, $sql);
 
     $row = mysqli_fetch_array($query);
+
+    mysqli_close($con);
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +25,7 @@
     </head>
     <body>
                 <div class="container mt-5">
-                    <form action="actualizar.php" method="POST">
+                    <form action="actualizar.php" method="post">
                     
                                 <input type="hidden" name="id" value="<?php echo $row['id']  ?>">
                                 

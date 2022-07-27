@@ -1,20 +1,28 @@
 <?php
 
-include("../data_base.php");
-$con=conectar();
+function actualizar_persona() {
+    include("../data_base.php");
+    $conexion = conectar();
 
-$id = $_POST['id'];
-$dni = $_POST['dni'];
-$nombre = $_POST['nombre'];
-$fecha_nacimiento = $_POST['fecha_nacimiento'];
-$direccion = $_POST['direccion'];
-$telefono = $_POST['telefono'];
+    if (mysqli_connect_errno()) {
+        printf("Conexión fallida: %s\n", mysqli_connect_error());
+        exit();
+    }
 
-$sql = "UPDATE persona SET dni='$dni', nombre='$nombre', fecha_nacimiento='$fecha_nacimiento', direccion='$direccion', telefono='$telefono' 
-WHERE id='$id'";
-$query=mysqli_query($con, $sql);
+    $id = $_POST['id'];
+    $dni = $_POST['dni'];
+    $nombre = $_POST['nombre'];
+    $fecha_nacimiento = $_POST['fecha_nacimiento'];
+    $direccion = $_POST['direccion'];
+    $telefono = $_POST['telefono'];
 
-    if($query){
+    $sql = "UPDATE persona SET dni='$dni', nombre='$nombre', fecha_nacimiento='$fecha_nacimiento', direccion='$direccion', telefono='$telefono' 
+    WHERE id='$id'";
+
+    if($resultado = mysqli_query($conexion, $sql)) {
         header("Location: ../index.php");
     }
+    mysqli_close($conexion);
+}
+
 ?>

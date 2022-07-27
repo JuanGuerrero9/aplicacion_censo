@@ -1,4 +1,20 @@
-
+<?php
+    include("validacion.php");
+    $errorMsgLogin = '';
+    if (!empty($_POST['inicioSesion'])) {
+        $usuario = $_POST['usuario'];
+        $password = $_POST['password'];
+        if($usuario && $password) {
+            $respuesta = iniciar_sesion($usuario, $password);
+            if($respuesta) {
+                $url = 'index.php';
+                header("Location: $url"); // Redireccion a index.php
+            } else {
+            $errorMsgLogin = "Verificar las credenciales.";
+            }
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -22,16 +38,17 @@
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Inicio Sesión</h3></div>
                                     <div class="card-body">
-                                        <form action="validacion.php" method='post'>
+                                        <form action="" method='post'>
                                             <div class="form-floating mb-3">
                                                 <input type="text" placeholder="ingrese su nombre" name="usuario" class="form-control">
                                                 <label for="inputUsername">Nombre de Usuario</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input type="password" placeholder="ingrese su contraseña" name="contraseña" class="form-control">
+                                                <input type="password" placeholder="ingrese su contraseña" name="password" class="form-control">
                                                 <label for="inputPassword">Contraseña</label>
                                             </div>
-                                            <input type="submit" value="Ingresar" class="btn btn-primary">
+                                            <div class="alert alert-danger errorMsg"><?php echo $errorMsgLogin; ?></div>
+                                            <input type="submit" value="Ingresar" class="btn btn-primary" name="inicioSesion">
                                         </form>
                                     </div>
                                 </div>               

@@ -1,38 +1,29 @@
 <?php
-    function iniciar_sesion(){
-        include("data_base.php");
+    function iniciar_sesion($usuario, $password){
+        try {
+            session_start();
+            include("data_base.php");
+            $conexion = conectar_db();
 
-        $usuario = $_POST['usuario'];
-        $contraseña = $_POST['contraseña'];
-        session_start();
-        $_SESSION['usuario'] = $usuario;
+            # Se realiza una consulta a la base de datos si existe el usuario con sus credenciales
 
-        # Se realiza una consulta a la base de datos si existe el usuario con sus credenciales
-
-        $consulta = "SELECT * FROM usuarios where usuario = '$usuario' and contraseña = '$contraseña'";
-
-        $conexion = conectar();
-        $validacion = mysqli_query($conexion, $consulta);
-
-        $filas = mysqli_num_rows($validacion);
-
-        if($filas){
-            header("location:index.php");
-        }else{
-            ?>
-            <?php
-                include("login.php");
-            ?>
-        <div class="container col-md-12">
-            <div class="alert alert-danger col-auto text-center" style="margin-top:-400px">
-                <h2>Error en la autenticacion! verifique su usuario y contraseña</h2>
-            </div>
-        </div>
-        <?php
+            $validacion = $conexion->prepare("SELECT * FROM usuarios WHERE usuario=:usuario  AND password=:password"); 
+            $validacion -> bindParam(":usuario", $usuario, PDO::PARAM_STR) ;
+            $validacion -> bindParam(":password", $password, PDO::PARAM_STR) ;
+            $validacion -> execute();
+            $conexion = null;
+            if($validacion->rowCount() == 1) {
+                $fila  = $validacion->fetch();
+                $_SESSION['usuario'] = $fila['usuario']; // Storing user session value
+                return true;
+            } else {
+                return false;
+            }
+        } catch(PDOException $e) {
+            echo '{"error":{"text":'. $e->getMessage() .'}}';
         }
-        mysqli_free_result($validacion);
-        mysqli_close($conexion);
+
     }
 
-    iniciar_sesion();
+    
 ?>

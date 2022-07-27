@@ -1,10 +1,21 @@
 <?php 
-    include("data_base.php");
-    $con = conectar();
+    $errorMsgCrearPersona = "";
+    try {
+        include("data_base.php");
 
-    $sql = "SELECT * FROM personas";
-    $query = mysqli_query($con, $sql);
+        $conexion = conectar_db();
+        $consultaSQL = "SELECT * FROM personas";
+      
+        $sentencia = $conexion->prepare($consultaSQL);
+        $sentencia->execute();
+      
+        $personas = $sentencia->fetchAll();
+      
+    } catch(PDOException $error) {
+        $error = $error->getMessage();
+    }
 ?>
+
 
 <!DOCTYPE html>
   <html lang="es">
@@ -109,18 +120,20 @@
 
                                     <tbody>
                                             <?php
-                                                while($row = mysqli_fetch_array($query)){
-                                            ?>
-                                                <tr>
-                                                    <th><?php  echo $row['nombre']?></th>
-                                                    <th><?php  echo $row['dni']?></th>
-                                                    <th><?php  echo $row['fecha_nacimiento']?></th>
-                                                    <th><?php  echo $row['direccion']?></th>    
-                                                    <th><?php  echo $row['telefono']?></th>    
-                                                    <th><a href="personas/editar_persona.php?id=<?php echo $row['id'] ?>" class="btn btn-info">Editar</a>
-                                                    <a href="personas/eliminar.php?id=<?php echo $row['id'] ?>" class="btn btn-danger">Eliminar</a></th>                   
-                                                </tr>
-                                            <?php 
+                                                if ($personas && $sentencia->rowCount() > 0) {
+                                                    foreach ($personas as $fila) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $fila["nombre"]; ?></td>
+                                                        <td><?php echo $fila["dni"]; ?></td>
+                                                        <td><?php echo $fila["fecha_nacimiento"]; ?></td>
+                                                        <td><?php echo $fila["direccion"]; ?></td>
+                                                        <td><?php echo $fila["telefono"]; ?></td>
+                                                        <th><a href="personas/editar_persona.php?id=<?php echo $fila['id'] ?>" class="btn btn-info">Editar</a>
+                                                        <a href="personas/eliminar.php?id=<?php echo $fila['id'] ?>" class="btn btn-danger">Eliminar</a></th>  
+                                                    </tr>
+                                                    <?php
+                                                    }
                                                 }
                                             ?>
                                     </tbody>
@@ -130,53 +143,7 @@
                     </div>
                 </div>
             </div>
-            
-    <!-- Agregar modal -->
-    <div class="modal fade" role="dialog" id="add-modal">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Crear persona</h2>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <form action="personas/crear_persona.php" id="nueva_persona" method="POST">
-                            <div class="form-group">
-                                <label for="first_name" class="control-label">Nombre</label>
-                                <input type="text" class="form-control rounded-0" id="nombre" name="nombre" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name" class="control-label">DNI</label>
-                                <input type="text" class="form-control rounded-0" id="dni" name="dni" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="control-label">Fecha de nacmiento</label>
-                                <input type="date" class="form-control rounded-0" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="birthdate" class="control-label">Direccion</label>
-                                <input type="text" class="form-control rounded-0" id="direccion" name="direccion" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="birthdate" class="control-label">Telefono</label>
-                                <input type="number" class="form-control rounded-0" id="telefono" name="telefono" required>
-                            </div>
-                        </form>
-                    </div>    
-                </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary" form="nueva_persona">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>       
-    <!-- /Agregar modal -->
+    
 
     <!-- Editar modal -->
     <div class="modal fade" role="dialog" id="edit-modal">
@@ -225,5 +192,5 @@
     </div>       
     <!-- /Editar modal -->
 
-
+<?php include("modal_crear.php") ?>
 </body>
