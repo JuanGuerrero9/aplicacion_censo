@@ -1,43 +1,70 @@
-<?php 
-    include("../data_base.php");
-    $con = conectar();
-
-    $id = $_GET['id'];
-
-    $sql = "SELECT * FROM personas WHERE id = '$id'";
-    $query = mysqli_query($con, $sql);
-
-    $row = mysqli_fetch_array($query);
-
-    mysqli_close($con);
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title></title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/style.css" rel="stylesheet">
-        <title>Editar</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-        
-    </head>
-    <body>
-                <div class="container mt-5">
-                    <form action="actualizar.php" method="post">
-                    
-                                <input type="hidden" name="id" value="<?php echo $row['id']  ?>">
-                                
-                                <input type="text" class="form-control mb-3" name="dni" placeholder="dni" value="<?php echo $row['dni']  ?>">
-                                <input type="text" class="form-control mb-3" name="nombre" placeholder="nombre" value="<?php echo $row['nombre']  ?>">
-                                <input type="date" class="form-control mb-3" name="fecha_nacimiento" placeholder="fecha_nacimiento" value="<?php echo $row['fecha_nacimiento']  ?>">
-                                <input type="text" class="form-control mb-3" name="direccion" placeholder="Caballos fuerza" value="<?php echo $row['direccion']  ?>">
-                                <input type="text" class="form-control mb-3" name="telefono" placeholder="Telefono" value="<?php echo $row['telefono']  ?>">
-                                
-                            <input type="submit" class="btn btn-primary btn-block" value="Actualizar">
-                    </form>
-                    
+<!-- Editar modal -->
+<div class="modal fade" role="dialog" id="edit_<?php echo $fila['id']; ?>">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Editar Persona</h2>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-    </body>
-</html>
+                
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form action="personas/actualizar.php?idpersona=<?php echo $fila['id']; ?>" method="post">
+                        <input type="hidden" name="id">
+                            <div class="form-group">
+                                <label for="first_name" class="control-label">Nombre</label>
+                                <input type="text" class="form-control rounded-0" id="nombre" name="nombre" value="<?php echo $fila['nombre']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name" class="control-label">DNI</label>
+                                <input type="text" class="form-control rounded-0" id="dni" name="dni" value="<?php echo $fila['dni']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="control-label">Fecha de nacmiento</label>
+                                <input type="date" class="form-control rounded-0" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo $fila['fecha_nacimiento']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthdate" class="control-label">Direccion</label>
+                                <input type="text" class="form-control rounded-0" id="direccion" name="direccion" value="<?php echo $fila['direccion']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthdate" class="control-label">Telefono</label>
+                                <input type="number" class="form-control rounded-0" id="telefono" name="telefono" value="<?php echo $fila['telefono']; ?>">
+                            </div>
+                            
+                    </div>    
+                </div>
+                <div class="alert alert-danger errorMsg"><?php echo $errorMsgCrearPersona; ?></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="fa fa-close"></span> Cancelar</button>
+                    <button type="submit" class="btn btn-primary" name="editarPersona"><span class="fa fa-check"></span> Actualizar</button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>       
+    <!-- /Editar modal -->
+
+<!-- Eliminar -->
+<div class="modal fade" id="delete_<?php echo $fila['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            	<center><h4 class="modal-title" id="myModalLabel">Borrar persona</h4></center>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">	
+            	<p class="text-center">¿Estas seguro en borrar los datos de?</p>
+				<h2 class="text-center"><?php echo $fila['nombre'].' '.$fila['dni']; ?></h2>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> Cancelar</button>
+                <a href="eliminar.php?idpersona=<?php echo $fila['id']; ?>" class="btn btn-danger"><span class="fa fa-trash"></span> Si</a>
+            </div>
+
+        </div>
+    </div>
+</div>

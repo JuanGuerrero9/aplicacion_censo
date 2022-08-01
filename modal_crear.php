@@ -1,6 +1,3 @@
-<?php
-    
-?>
 
 <!-- Agregar modal -->
 <div class="modal fade" role="dialog" id="add-modal">

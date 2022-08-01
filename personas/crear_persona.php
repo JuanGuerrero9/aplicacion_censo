@@ -6,9 +6,7 @@
   
     try {
       
-      
       $nueva_persona = "INSERT INTO personas (dni, nombre, fecha_nacimiento, direccion, telefono) values (?, ?, ?, ?, ?);";
-      // $nueva_persona .= " values (:" . implode(", :", array_keys($persona)) . ")";
       
       $validacion = $conexion->prepare($nueva_persona);
       $resultado = $validacion->execute([$dni, $nombre, $fecha_nacimiento, $direccion, $telefono]);

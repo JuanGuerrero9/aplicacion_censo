@@ -1,28 +1,41 @@
 <?php
 
-function actualizar_persona() {
-    include("../data_base.php");
-    $conexion = conectar();
-
-    if (mysqli_connect_errno()) {
-        printf("Conexión fallida: %s\n", mysqli_connect_error());
-        exit();
+function actualizar_persona($dni, $nombre, $fecha_nacimiento, $direccion, $telefono, $id) {
+    include ('../data_base.php');
+  
+    $conexion = conectar_db();
+  
+    try {
+      
+      $actualizar_persona = "UPDATE personas SET dni = '$dni', nombre = '$nombre', fecha_nacimiento = '$fecha_nacimiento', ";
+      $actualizar_persona .= "direccion = '$direccion', telefono = '$telefono' WHERE id = '$id'";
+      
+      $validacion = $conexion->prepare($actualizar_persona);
+      $resultado = $validacion->execute();
+      if($resultado == True) {
+        return true;
+    } else {
+        return false;
     }
-
-    $id = $_POST['id'];
-    $dni = $_POST['dni'];
-    $nombre = $_POST['nombre'];
-    $fecha_nacimiento = $_POST['fecha_nacimiento'];
-    $direccion = $_POST['direccion'];
-    $telefono = $_POST['telefono'];
-
-    $sql = "UPDATE persona SET dni='$dni', nombre='$nombre', fecha_nacimiento='$fecha_nacimiento', direccion='$direccion', telefono='$telefono' 
-    WHERE id='$id'";
-
-    if($resultado = mysqli_query($conexion, $sql)) {
-        header("Location: ../index.php");
+  
+    } catch(PDOException $error) {
+      $resultado['error'] = true;
+      $resultado['mensaje'] = $error->getMessage();
     }
-    mysqli_close($conexion);
+  }
+
+session_start();
+
+$errorMsgCrearPersona = '';
+if(isset($_POST['editarPersona'])) {
+$formulario = actualizar_persona($_POST['dni'], $_POST['nombre'], $_POST['fecha_nacimiento'], $_POST['direccion'], $_POST['telefono'], $_GET['idpersona']);
+if($formulario) {
+    $url = '../index.php';
+    header("Location: $url"); // Redireccion a index.php
+} else {
+    $errorMsgCrearPersona = "Verificar los campos rellenados.";
 }
+    
+} 
 
 ?>
