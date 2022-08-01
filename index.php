@@ -130,7 +130,7 @@
                                                         <td><?php echo $fila["direccion"]; ?></td>
                                                         <td><?php echo $fila["telefono"]; ?></td>
                                                         <th><a href="#edit_<?php echo $fila['id']; ?>" class="btn btn-info" data-toggle="modal"><span class="fa fa-edit"></span> Editar</a>
-                                                        <a href="#delete_<?php echo $fila['id']; ?>" class="btn btn-danger"><span class="fa fa-trash"></span> Eliminar</a></th>  
+                                                        <a href="#delete_<?php echo $fila['id']; ?>" class="btn btn-danger" data-toggle="modal"><span class="fa fa-trash"></span> Eliminar</a></th>  
                                                         <?php include("personas/editar_persona.php") ?>
                                                     </tr>
                                                     <?php

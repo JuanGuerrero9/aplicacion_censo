@@ -62,7 +62,7 @@
 			</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> Cancelar</button>
-                <a href="eliminar.php?idpersona=<?php echo $fila['id']; ?>" class="btn btn-danger"><span class="fa fa-trash"></span> Si</a>
+                <a href="personas/eliminar.php?idpersona=<?php echo $fila['id']; ?>" class="btn btn-danger"><span class="fa fa-trash"></span> Si</a>
             </div>
 
         </div>
